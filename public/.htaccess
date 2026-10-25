@@ -1,0 +1,39 @@
+# ── TFM static site · Apache (SuperHosting) ───────────────────────────────
+Options -Indexes
+DirectoryIndex index.html
+
+RewriteEngine On
+
+# Force HTTPS (make sure SSL is enabled in cPanel first)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Root -> default language
+RewriteRule ^$ /bg/ [L,R=302]
+
+# Custom 404
+ErrorDocument 404 /404.html
+
+# ── Compression ───────────────────────────────────────────────────────────
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# ── Caching ───────────────────────────────────────────────────────────────
+<IfModule mod_expires.c>
+  ExpiresActive On
+  # Hashed build assets — cache hard
+  <FilesMatch "\.(js|css|woff2?|ttf|otf)$">
+    ExpiresDefault "access plus 1 year"
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(png|jpe?g|webp|svg|gif|ico|mp4|webm)$">
+    ExpiresDefault "access plus 6 months"
+  </FilesMatch>
+  # HTML — always revalidate
+  <FilesMatch "\.html$">
+    ExpiresDefault "access plus 0 seconds"
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>

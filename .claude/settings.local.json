@@ -1,9 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Read(//c/Users/User/.claude/skills/impeccable/**)",
-      "Bash(node scripts/palette.mjs)",
-      "Skill(higgsfield-generate)"
-    ]
-  }
-}
